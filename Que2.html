@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" integrity="sha512-b2QcS5SsA8tZodcDtGRELiGv5SaKSk1vDHDaQRda0htPYWZ6046lr3kJ5bAAQdpV2mmA/4v0wQF9MyU6/pDIAg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.min.js" integrity="sha512-WW8/jxkELe2CAiE4LvQfwm1rajOS8PHasCCx+knHG0gBHt8EXxS6T6tJRTGuDQVnluuAvMxWF4j8SNFDKceLFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js" integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/additional-methods.min.js" integrity="sha512-TiQST7x/0aMjgVTcep29gi+q5Lk5gVTUPE9XgN0g96rwtjEjLpod4mlBRKWHeBcvGBAEvJBmfDqh2hfMMmg+5A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>State City Dropdown</title>
+    <style>
+        /* New CSS styling */
+
+        /* Full-screen gradient background */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f0e5cf, #d4afcd);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Form container with card effect */
+        .form-container {
+            background-color: #ffffff;
+            width: 450px;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* Title styling */
+        h1 {
+            font-size: 26px;
+            font-weight: 600;
+            color: #5f4b66;
+            margin-bottom: 30px;
+        }
+
+        /* Dropdown styling */
+        select.form-control {
+            font-size: 16px;
+            color: #5f4b66;
+            padding: 10px;
+            border: 1px solid #d4afcd;
+            border-radius: 10px;
+            transition: border 0.3s ease;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        select.form-control:focus {
+            border-color: #b85c9e;
+            outline: none;
+            box-shadow: 0px 2px 10px rgba(184, 92, 158, 0.3);
+        }
+
+        /* Align select elements in a row with a gap */
+        .dropdowns {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>State and City Selector</h1>
+        <div class="dropdowns">
+            <select id="state" class="form-control">
+                <option value="">--Select State--</option>
+            </select>
+            <select id="city" class="form-control" disabled>
+                <option value="">--Select City--</option>
+            </select>
+        </div>
+    </div>
+</body>
+<script>
+    const stateCity = {
+    "Andhra Pradesh": [
+        "Visakhapatnam",
+        "Vijayawada",
+        "Guntur",
+        "Nellore",
+        "Kurnool",
+        "Rajahmundry",
+        "Tirupati",
+        "Kakinada",
+        "Kadapa",
+        "Anantapur"
+    ],
+    "Arunachal Pradesh": [
+        "Itanagar",
+        "Naharlagun",
+        "Pasighat",
+        "Roing",
+        "Tezu",
+        "Ziro",
+        "Bomdila",
+        "Seppa",
+        "Tawang",
+        "Along"
+    ],
+    "Assam": [
+        "Guwahati",
+        "Silchar",
+        "Dibrugarh",
+        "Jorhat",
+        "Nagaon",
+        "Tinsukia",
+        "Tezpur",
+        "Bongaigaon",
+        "Dhubri",
+        "Goalpara"
+    ],
+    "Bihar": [
+        "Patna",
+        "Gaya",
+        "Bhagalpur",
+        "Muzaffarpur",
+        "Purnia",
+        "Darbhanga",
+        "Arrah",
+        "Bihar Sharif",
+        "Katihar",
+        "Munger"
+    ],
+    "Chhattisgarh": [
+        "Raipur",
+        "Bhilai",
+        "Bilaspur",
+        "Korba",
+        "Durg",
+        "Raigarh",
+        "Rajnandgaon",
+        "Jagdalpur",
+        "Ambikapur",
+        "Dhamtari"
+    ],
+    "Goa": [
+        "Panaji",
+        "Vasco da Gama",
+        "Margao",
+        "Mapusa",
+        "Ponda",
+        "Bicholim",
+        "Curchorem",
+        "Sanquelim",
+        "Cuncolim",
+        "Valpoi"
+    ],
+    "Gujarat": [
+        "Ahmedabad",
+        "Surat",
+        "Vadodara",
+        "Rajkot",
+        "Bhavnagar",
+        "Jamnagar",
+        "Junagadh",
+        "Gandhinagar",
+        "Nadiad",
+        "Mehsana"
+    ],
+    "Haryana": [
+        "Faridabad",
+        "Gurugram",
+        "Panipat",
+        "Ambala",
+        "Yamunanagar",
+        "Rohtak",
+        "Hisar",
+        "Karnal",
+        "Sonipat",
+        "Panchkula"
+    ],
+    "Himachal Pradesh": [
+        "Shimla",
+        "Mandi",
+        "Solan",
+        "Dharamshala",
+        "Bilaspur",
+        "Una",
+        "Hamirpur",
+        "Kullu",
+        "Chamba",
+        "Nahan"
+    ],
+    "Jharkhand": [
+        "Ranchi",
+        "Jamshedpur",
+        "Dhanbad",
+        "Bokaro Steel City",
+        "Deoghar",
+        "Phusro",
+        "Hazaribagh",
+        "Giridih",
+        "Ramgarh",
+        "Medininagar"
+    ],
+    "Karnataka": [
+        "Bangalore",
+        "Hubli",
+        "Mysore",
+        "Gulbarga",
+        "Belgaum",
+        "Mangalore",
+        "Davanagere",
+        "Bellary",
+        "Bijapur",
+        "Shimoga"
+    ],
+    "Kerala": [
+        "Thiruvananthapuram",
+        "Kochi",
+        "Kozhikode",
+        "Thrissur",
+        "Kollam",
+        "Palakkad",
+        "Kannur",
+        "Alappuzha",
+        "Kottayam",
+        "Kasaragod"
+    ],
+    "Madhya Pradesh": [
+        "Indore",
+        "Bhopal",
+        "Jabalpur",
+        "Gwalior",
+        "Ujjain",
+        "Sagar",
+        "Dewas",
+        "Satna",
+        "Ratlam",
+        "Rewa"
+    ],
+    "Maharashtra": [
+        "Mumbai",
+        "Pune",
+        "Nagpur",
+        "Thane",
+        "Nashik",
+        "Kalyan-Dombivali",
+        "Vasai-Virar",
+        "Aurangabad",
+        "Navi Mumbai",
+        "Solapur"
+    ]
+}
+
+    // Populate state dropdown
+    let op = "<option value=''>--Select State--</option>"
+    $.each(stateCity, function(key, val) {
+        op += `<option value="${key}">${key}</option>`
+    });
+    $("#state").html(op);
+
+    // Update city dropdown based on selected state
+    $("#state").change(function() {
+        if ($(this).val() !== "") {
+            let state = $(this).val();
+            $("#city").attr("disabled", false);
+            let o = "<option value=''>--Select City--</option>";
+            $.each(stateCity[state], function(index, city) {
+                o += `<option value='${city}'>${city}</option>`
+            });
+            $("#city").html(o);
+        } else {
+            $("#city").attr("disabled", true);
+            $("#city").html("<option value=''>--Select City--</option>");
+        }
+    });
+</script>
+</html>

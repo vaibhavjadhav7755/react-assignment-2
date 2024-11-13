@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" integrity="sha512-b2QcS5SsA8tZodcDtGRELiGv5SaKSk1vDHDaQRda0htPYWZ6046lr3kJ5bAAQdpV2mmA/4v0wQF9MyU6/pDIAg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Load More with Pagination - Unsplash API</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #search-query {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border-radius: 30px;
+            border: 2px solid #ddd;
+            transition: all 0.3s;
+        }
+
+        #search-query:focus {
+            border-color: #4a90e2;
+            outline: none;
+        }
+
+        #content-list {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        #content-list li {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #content-list li:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        #content-list img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        #content-list p {
+            margin-top: 10px;
+            text-align: center;
+            color: #777;
+            font-size: 14px;
+        }
+
+        #load-more {
+            display: block;
+            margin: 40px auto;
+            background-color: #4a90e2;
+            color: white;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #load-more:hover {
+            background-color: #357ab7;
+        }
+
+        .d-none {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2> Image Search</h2>
+    <input type="text" id="search-query" class="form-control" placeholder="Search for images...">
+    <ul id="content-list">
+        <!-- Image results will be appended here -->
+    </ul>
+    <button id="load-more" class="btn d-none">Load More</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+$(document).ready(function() {
+    let currentPage = 1;
+    let query = ''; // This will store the current search term
+
+    // Function to fetch and display images from Unsplash API
+    function fetchImages() {
+        $.ajax({
+            url: `https://api.unsplash.com/search/photos?client_id=ihSZRQqQcEgBgRsF6Ceyqxje13_RyLuOxVZx6xqQk30&lang=en&page=${currentPage}&query=${query}`,
+            type: 'GET',
+            success: function(data) {
+                const results = data.results;
+                
+                // Append new images to the list
+                results.forEach(result => {
+                    $('#content-list').append(`
+                        <li>
+                            <img src="${result.urls.small}" alt="${result.alt_description}">
+                            <p>By: ${result.user.name}</p>
+                        </li>
+                    `);
+                });
+
+                // Show or hide the "Load More" button based on whether there are more pages
+                if (results.length > 0) {
+                    $('#load-more').removeClass('d-none');
+                } else {
+                    $('#load-more').addClass('d-none');
+                }
+            }
+        });
+    }
+
+    // Event listener for searching images when user types
+    $('#search-query').keyup(function() {
+        query = $(this).val().trim();
+        
+        if (query.length > 0) {
+            currentPage = 1; // Reset to page 1 for new searches
+            $('#content-list').empty(); // Clear existing results
+            fetchImages(); // Fetch new search results
+        } else {
+            $('#content-list').empty(); // Clear the list if the search field is empty
+            $('#load-more').addClass('d-none');
+        }
+    });
+
+    // Event listener for "Load More" button
+    $('#load-more').click(function() {
+        currentPage++; // Increment the page number
+        fetchImages(); // Fetch the next set of results
+    });
+});
+</script>
+
+</body>
+</html>
